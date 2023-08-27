@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Player</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div id="container">
+    <div id="divAddMusic">
+      <button id="addMusics">+</button>
+      <input id="linkDownload" type="text" placeholder="Link to download" />
+      <span id="resultDownload"></span>
+    </div>
+
+    <audio id="audioPlayer" controls style="display: none">
+      <source
+        src="http://localhost:7778/listen?music=d2d62028-a29f-45f2-84a8-ac7d3a77928d"
+        type="audio/mpeg"
+      />
+      Seu navegador não suporta a reprodução de áudio.
+    </audio>
+
+    <div id="musicsList">
+      <input id="searchMusic" type="text" placeholder="Search music" />
+      <div id="musicListDiv">
+        <ul id="musics"></ul>
+      </div>
+    </div>
+
+    <div class="player-controls">
+      <input id="volume" type="range" min="0" max="1" step="0.01" value="1" />
+      <div class="progress-container">
+        <div id="progress-bar"></div>
+      </div>
+      <span id="currentTimeAndDuration">0:00/0:00</span>
+    </div>
+  </div>
+    <script type="module" src="./js/index.js"></script>
+    <script type="module" src="./js/player.js"></script>
+  </body>
+</html>
