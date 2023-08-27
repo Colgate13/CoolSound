@@ -9,7 +9,7 @@ import {
   TransformStreamFileMusic,
 } from "../services/Listen";
 import { downloadYTMusic } from "../services/Download";
-import { Database } from "../database";
+import { Database } from "../infra/database/database";
 
 const routes = Router();
 

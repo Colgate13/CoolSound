@@ -3,7 +3,7 @@ import path from "node:path";
 import ytdl from "ytdl-core";
 import ytpl from "ytpl";
 import { uid } from "../Utils/uid";
-import { Database } from "../database";
+import { Database } from "../infra/database/database";
 import { IPlaylist } from "../shared/Playlist";
 import { IAuthor } from "../shared/Author";
 
