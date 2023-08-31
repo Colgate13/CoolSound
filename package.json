@@ -4,20 +4,22 @@
   "description": "Radio Sound",
   "main": "dist/main.js",
   "scripts": {
-    "download": "ts-node-dev --respawn --transpile-only src/download.ts",
-    "dev:web": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev:web": "DEBUG=app:* ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gabriel Barros Feitosa Sa (Colgate13)",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
+    "debug": "^4.3.4",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "ytdl-core": "^4.11.5",
     "ytpl": "^2.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
+    "@types/debug": "^4.1.8",
     "@types/express": "^4.17.17",
     "@types/node": "^20.4.5",
     "prisma": "^5.0.0",
