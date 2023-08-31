@@ -2,26 +2,26 @@ import fs from "node:fs";
 import path from "node:path";
 import ytdl from "ytdl-core";
 import ytpl from "ytpl";
-import { uid } from "../Utils/uid";
+import { uid } from "../shared/Utils/uid";
 import { Database } from "../infra/database/database";
 import { IPlaylist } from "../shared/Playlist";
 import { IAuthor } from "../shared/Author";
+import Debug from 'debug';
 
+const debug = Debug('app:services:download');
 const musicPath = path.resolve(__dirname, "..", "..", "database", "musics");
+
+debug("Music path: ", musicPath);
 
 export async function downloadYTMusic(link: string) {
   const playlistChecker = await ytpl(link).catch(() => null);
+
   const playlistInfoOrVideoInfo = await ytdl.getInfo(link);
 
   if (playlistChecker && playlistChecker.items.length > 1) {
 
     const playlist = await Database.createPlaylist(uid(), playlistInfoOrVideoInfo.videoDetails.title, []);
-
-    let count = 0;
     for (const item of playlistChecker.items) {
-      if (count > 1) { 
-        break;
-      }
       const musicId = uid();
       const audioTitle = `${musicId}.mp3`;
       const output = path.resolve(musicPath, audioTitle);
@@ -32,7 +32,6 @@ export async function downloadYTMusic(link: string) {
         audioInfo.videoDetails.author.id
       );
       await downloadYT(item.shortUrl, output, musicId, audioInfo, author, playlist);
-      count++;
     }
   } else {
     const tryGetMusic = await Database.getMusicByYtVideoId(
@@ -80,24 +79,22 @@ async function downloadYT(
       const music = await Database.getMusicByYtVideoId(audioInfo.videoDetails.videoId);
 
       if (!music) { 
-        console.log("Music not found");
+        debug(`Music not found: ${audioInfo.videoDetails.title}`);
       }
 
       if (playlist && music) {
         await Database.addMusicToPlaylist(playlist.id, music.id);
       }
 
-      console.log("Audio downloaded successfully!");
+      debug(`Audio downloaded successfully!: ${audioInfo.videoDetails.title}`);
     })
     .on("error", (err) => {
-      console.error("Error downloading audio:", err);
+      debug("Error downloading audio:", err);
     });
     console.timeEnd("download");
   } else {
-    console.log(music)
-    console.log(playlist)
     if (playlist && music) { 
-      console.log("Music already exists");
+      debug(`Music already exists: ${audioInfo.videoDetails.title}`);
       await Database.addMusicToPlaylist(playlist.id, music.id);
     }
   }

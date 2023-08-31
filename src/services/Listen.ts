@@ -1,12 +1,15 @@
 import fs, { ReadStream } from 'node:fs';
 import path from 'node:path';
+import Debug from 'debug';
+
+const debug = Debug('app:routes');
 
 const musicCwd = (music: string) => {
   return path.resolve(__dirname, '..', '..', 'database', 'musics', `${music}.mp3`);
 }
 
 async function createFileStream(musicName: string): Promise<ReadStream> {
-  if (!fs.existsSync(musicCwd(musicName))) console.log('Arquivo não existe');
+  if (!fs.existsSync(musicCwd(musicName))) debug(`Arquivo não existe: ${musicName}`);
 
   return fs.createReadStream(musicCwd(musicName));
 }
@@ -19,7 +22,7 @@ async function* ReadableStreamFileMusic(musicName: string): AsyncGenerator<Buffe
     cout++;
     yield data;
   }
-  console.log(cout);
+  debug(`Quantidade de bytes lidos: ${cout} in ${musicName}`);
 }
 
 async function* TransformStreamFileMusic(stream: AsyncIterable<Buffer>): AsyncIterable<Buffer> { 
