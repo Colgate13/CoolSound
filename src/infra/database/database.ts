@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { uid } from '../../Utils/uid'
+import { uid } from '../../shared/Utils/uid'
 import { IPlaylist } from 'shared/Playlist';
 
 const authorFile = path.resolve(__dirname, '..', '..', '..', 'database', 'authors.json');
@@ -98,7 +98,7 @@ export class Database {
       ytVideoId,
       authorId,
     }
-    console.log(music)
+
     const musics = await this.getMusics()
 
     let musicExists = false;
@@ -174,20 +174,20 @@ export class Database {
     const playlists = await this.getPlaylists()
     for (const playlist of playlists) {
       if (playlist.id === playlistId) { 
-
-        console.log('playlist exists')
-
         let musicExists = false;
-        for (const musicSearch of playlist.musicsIds) {
+        for (const musicSearch of playlist.musicsIds || []) {
           if (musicSearch === musicId) {
-            console.log('music exists')
             musicExists = true;
             break;
           }
         }
 
         if (!musicExists) {
-          console.log('music not exists')
+
+          if (!playlist.musicsIds) { 
+            playlist.musicsIds = []
+          }
+
           playlist.musicsIds.push(musicId)
           
           const playlistsString = JSON.stringify(playlists, null, 2)
